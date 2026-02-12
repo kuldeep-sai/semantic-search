@@ -12,7 +12,19 @@ SERP_API_KEY = "YOUR_SERPAPI_KEY"
 OPENAI_API_KEY = "YOUR_OPENAI_KEY"
 
 client = OpenAI(api_key=OPENAI_API_KEY)
-nlp = spacy.load("en_core_web_sm")
+import spacy
+from spacy.cli import download
+
+@st.cache_resource
+def load_spacy():
+    try:
+        return spacy.load("en_core_web_sm")
+    except OSError:
+        download("en_core_web_sm")
+        return spacy.load("en_core_web_sm")
+
+nlp = load_spacy()
+
 
 # ---- FUNCTIONS ----
 
